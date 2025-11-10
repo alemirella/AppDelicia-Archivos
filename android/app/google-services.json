@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "486557302729",
+    "project_id": "pandelicia-6bd3e",
+    "storage_bucket": "pandelicia-6bd3e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:486557302729:android:a7615abfe4b8d64e833218",
+        "android_client_info": {
+          "package_name": "com.example.panaderia_delicia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgQEK1s-EIlA2vRXE3OZjEDxnO9lNSV-c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
