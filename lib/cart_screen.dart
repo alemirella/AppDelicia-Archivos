@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'payment_method_screen.dart'; // Importar la nueva pantalla
 
 class CartScreen extends StatefulWidget {
   final String? userId;
@@ -94,6 +95,22 @@ class _CartScreenState extends State<CartScreen> {
       total += (item['precio'] ?? 0.0) * (item['cantidad'] ?? 0);
     }
     return total;
+  }
+
+  // Nueva función para proceder al pago
+  Future<void> _procederAPago(
+      List<dynamic> items, double total, String userName) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentMethodScreen(
+          userId: widget.userId!,
+          userName: userName,
+          cartItems: items,
+          total: total,
+        ),
+      ),
+    );
   }
 
   @override
@@ -338,28 +355,39 @@ class _CartScreenState extends State<CartScreen> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Compra realizada con éxito'),
+                    // Botón actualizado para ir a método de pago
+                    StreamBuilder<DocumentSnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('usuarios')
+                          .doc(widget.userId)
+                          .snapshots(),
+                      builder: (context, userSnapshot) {
+                        String userName = 'Usuario';
+                        
+                        if (userSnapshot.hasData && userSnapshot.data != null) {
+                          final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
+                          userName = userData?['nombre'] ?? 'Usuario';
+                        }
+
+                        return SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton.icon(
+                            onPressed: () =>
+                                _procederAPago(items, total, userName),
+                            icon: const Icon(Icons.payment),
+                            label: const Text(
+                              'Proceder al Pago',
+                              style: TextStyle(fontSize: 18),
                             ),
-                          );
-                          _vaciarCarrito();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
-                          foregroundColor: Colors.white,
-                        ),
-                        child: const Text(
-                          'Realizar Pedido',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
+                              foregroundColor: Colors.white,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

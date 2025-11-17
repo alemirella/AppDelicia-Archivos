@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'login_screen.dart';
+import 'admin_orders_screen.dart'; // Importar la nueva pantalla
 
 class AdminScreen extends StatefulWidget {
   final String userId;
@@ -20,7 +21,7 @@ class _AdminScreenState extends State<AdminScreen> {
   final TextEditingController _nombre = TextEditingController();
   final TextEditingController _precio = TextEditingController();
   final TextEditingController _descripcion = TextEditingController();
-  final TextEditingController _imagenUrl = TextEditingController(); // 🔹 nuevo campo
+  final TextEditingController _imagenUrl = TextEditingController();
 
   String? _categoriaSeleccionada;
   String? _idSeleccionado;
@@ -40,7 +41,7 @@ class _AdminScreenState extends State<AdminScreen> {
       'categoria': _categoriaSeleccionada,
       'precio': double.tryParse(_precio.text) ?? 0.0,
       'descripcion': _descripcion.text.trim(),
-      'imagenUrl': _imagenUrl.text.trim(), // 🔹 se guarda el enlace
+      'imagenUrl': _imagenUrl.text.trim(),
       'disponible': true,
       'fechaCreacion': FieldValue.serverTimestamp(),
     };
@@ -68,7 +69,7 @@ class _AdminScreenState extends State<AdminScreen> {
       'categoria': _categoriaSeleccionada,
       'precio': double.tryParse(_precio.text) ?? 0.0,
       'descripcion': _descripcion.text.trim(),
-      'imagenUrl': _imagenUrl.text.trim(), // 🔹 se actualiza también
+      'imagenUrl': _imagenUrl.text.trim(),
     };
 
     try {
@@ -158,6 +159,14 @@ class _AdminScreenState extends State<AdminScreen> {
     );
   }
 
+  // Nueva función para ir a la pantalla de pedidos
+  void _verPedidos() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const AdminOrdersScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,6 +176,12 @@ class _AdminScreenState extends State<AdminScreen> {
         foregroundColor: Colors.white,
         centerTitle: true,
         actions: [
+          // Botón para ver pedidos
+          IconButton(
+            icon: const Icon(Icons.receipt_long),
+            onPressed: _verPedidos,
+            tooltip: 'Ver Pedidos',
+          ),
           IconButton(icon: const Icon(Icons.logout), onPressed: _cerrarSesion),
         ],
       ),
@@ -175,6 +190,54 @@ class _AdminScreenState extends State<AdminScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Tarjeta de acceso rápido a pedidos
+            Card(
+              elevation: 3,
+              color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+              child: InkWell(
+                onTap: _verPedidos,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.receipt_long,
+                        size: 48,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Gestión de Pedidos',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Ver y administrar todos los pedidos',
+                              style: TextStyle(
+                                color: Colors.grey[700],
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.arrow_forward_ios),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            const Divider(thickness: 2),
+            const SizedBox(height: 16),
+
             Card(
               elevation: 3,
               child: Padding(

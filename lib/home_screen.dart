@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'catalog_screen.dart';
 import 'cart_screen.dart';
 import 'profile_screen.dart';
+import 'orders_history_screen.dart'; // Importar la nueva pantalla
 
 class HomeScreen extends StatefulWidget {
   final String? userId;
@@ -28,6 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
     _screens = [
       CatalogScreen(userId: widget.userId),
       CartScreen(userId: widget.userId),
+      // Si el usuario está logueado, mostrar historial de pedidos, sino mostrar perfil
+      widget.userId != null
+          ? OrdersHistoryScreen(userId: widget.userId!)
+          : ProfileScreen(userId: widget.userId, userName: widget.userName),
       ProfileScreen(userId: widget.userId, userName: widget.userName),
     ];
   }
@@ -43,22 +48,28 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
+        items: [
+          const BottomNavigationBarItem(
             icon: Icon(Icons.store),
             label: 'Catálogo',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
             label: 'Carrito',
           ),
           BottomNavigationBarItem(
+            icon: const Icon(Icons.receipt_long),
+            label: widget.userId != null ? 'Pedidos' : 'Perfil',
+          ),
+          const BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Perfil',
           ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Theme.of(context).colorScheme.secondary,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,
       ),
     );
