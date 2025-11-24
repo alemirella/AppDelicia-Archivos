@@ -1,5 +1,5 @@
 name: panaderia_delicia
-description: "A new Flutter project."
+description: "App de Panadería Delicia"
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -12,12 +12,23 @@ dependencies:
   firebase_core: ^2.27.0
   cloud_firestore: ^4.15.8
   firebase_database: ^10.5.7
-  intl: ^0.18.1 
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/icon/
+
+# Configuración del icono
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icon/icon.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/icon/icon.png"
